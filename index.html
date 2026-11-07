@@ -120,4 +120,549 @@
     <main class="flex-1 max-w-7xl w-full mx-auto p-4 md:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         
         <!-- Sidebar Controls (No Print) -->
-        <section class="no-print lg:col-span-5 bg-slate-800 rounded-xl shadow-lg border border-slate-
+        <section class="no-print lg:col-span-5 bg-slate-800 rounded-xl shadow-lg border border-slate-700 overflow-hidden flex flex-col max-h-[calc(100vh-90px)] sticky top-20">
+            <div class="bg-slate-950 px-4 py-3 border-b border-slate-800 text-white flex justify-between items-center">
+                <h2 class="font-bold text-xs uppercase tracking-wider text-slate-300">แบบฟอร์มกรอกข้อมูล</h2>
+                <span class="text-[10px] bg-blue-900 text-blue-200 font-semibold px-2 py-0.5 rounded border border-blue-700">Live Preview</span>
+            </div>
+
+            <div class="flex-1 overflow-y-auto p-4 space-y-5 text-xs text-slate-300">
+                
+                <!-- 1. Header Info -->
+                <div class="space-y-2">
+                    <h3 class="font-bold text-slate-100 uppercase text-[11px] border-b border-slate-700 pb-1">1. หัวเอกสาร</h3>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="block text-slate-400 mb-1 font-medium">ชนิดเอกสาร</label>
+                            <select id="docType" onchange="updatePreview()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                                <option value="ใบเสร็จรับเงิน / ใบกำกับภาษี">ใบเสร็จรับเงิน / ใบกำกับภาษี</option>
+                                <option value="ใบเสนอราคา">ใบเสนอราคา</option>
+                                <option value="ใบแจ้งหนี้ / บิลเงินสด">ใบแจ้งหนี้ / บิลเงินสด</option>
+                                <option value="ใบส่งของ / ใบรับรองการซ่อม">ใบส่งของ / ใบรับรองการซ่อม</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-slate-400 mb-1 font-medium">เลขที่เอกสาร</label>
+                            <input type="text" id="invoiceNo" value="INV-2026-0042" oninput="updatePreview()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white font-mono focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="block text-slate-400 mb-1 font-medium">วันที่ออกเอกสาร</label>
+                            <input type="date" id="invoiceDate" oninput="updatePreview()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-slate-400 mb-1 font-medium">วันครบกำหนดชำระ</label>
+                            <input type="date" id="dueDate" oninput="updatePreview()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. Garage Info -->
+                <div class="space-y-2">
+                    <h3 class="font-bold text-slate-100 uppercase text-[11px] border-b border-slate-700 pb-1">2. ข้อมูลอู่ซ่อมรถ</h3>
+                    <div>
+                        <label class="block text-slate-400 mb-1 font-medium">ชื่ออู่ / บริษัท</label>
+                        <input type="text" id="shopName" value="บริษัท ออโต้ เทค เซอร์วิส จำกัด" oninput="updatePreview()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white font-semibold focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-slate-400 mb-1 font-medium">ที่อยู่สถานประกอบการ</label>
+                        <textarea id="shopAddress" rows="2" oninput="updatePreview()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white focus:ring-2 focus:ring-blue-500 focus:outline-none">99/15 ถนนมิตรภาพ ตำบลในเมือง อำเภอเมือง จังหวัดขอนแก่น 40000</textarea>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="block text-slate-400 mb-1 font-medium">เบอร์โทรศัพท์</label>
+                            <input type="text" id="shopPhone" value="043-222-888, 089-777-9999" oninput="updatePreview()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-slate-400 mb-1 font-medium">เลขประจำตัวผู้เสียภาษี</label>
+                            <input type="text" id="shopTaxId" value="0105560123456" oninput="updatePreview()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white font-mono focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-slate-400 mb-1 font-medium">รูปโลโก้อู่</label>
+                        <input type="file" id="logoFile" accept="image/*" onchange="handleLogoUpload(event)" class="w-full text-xs text-slate-400 file:mr-3 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-slate-700 file:text-slate-200 hover:file:bg-slate-600">
+                    </div>
+                </div>
+
+                <!-- 3. Customer & Car Info -->
+                <div class="space-y-2">
+                    <h3 class="font-bold text-slate-100 uppercase text-[11px] border-b border-slate-700 pb-1">3. ข้อมูลลูกค้าและรถยนต์</h3>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="block text-slate-400 mb-1 font-medium">ชื่อลูกค้า / บริษัท</label>
+                            <input type="text" id="custName" value="คุณวิทวัส กิตติโสภณ" oninput="updatePreview()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-slate-400 mb-1 font-medium">เบอร์โทรศัพท์ลูกค้า</label>
+                            <input type="text" id="custPhone" value="081-234-5678" oninput="updatePreview()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-3 gap-2">
+                        <div>
+                            <label class="block text-slate-400 mb-1 font-medium">ยี่ห้อ/รุ่นรถ</label>
+                            <input type="text" id="carModel" value="Honda CR-V 2.4" oninput="updatePreview()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-slate-400 mb-1 font-medium">ทะเบียนรถ</label>
+                            <input type="text" id="carPlate" value="ขก 8899 ขอนแก่น" oninput="updatePreview()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white font-bold focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-slate-400 mb-1 font-medium">เลขไมล์ (กม.)</label>
+                            <input type="text" id="carMileage" value="128,450 กม." oninput="updatePreview()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="block text-slate-400 mb-1 font-medium">ช่างผู้รับผิดชอบ</label>
+                            <input type="text" id="mechanicName" value="ช่างสมศักดิ์" oninput="updatePreview()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-slate-400 mb-1 font-medium">เลขที่ใบรับรถ (Job No.)</label>
+                            <input type="text" id="jobNo" value="JOB-6901" oninput="updatePreview()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white font-mono focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4. Items Management -->
+                <div class="space-y-2">
+                    <div class="flex justify-between items-center border-b border-slate-700 pb-1">
+                        <h3 class="font-bold text-slate-100 uppercase text-[11px]">4. รายการ อะไหล่ / ค่าบริการ</h3>
+                        <button onclick="addItemRow()" class="bg-blue-600 hover:bg-blue-500 text-white px-3 py-1 rounded text-xs font-semibold transition">
+                            + เพิ่มรายการ
+                        </button>
+                    </div>
+                    <div id="itemInputsContainer" class="space-y-2">
+                        <!-- Dynamic items -->
+                    </div>
+                </div>
+
+                <!-- 5. Calculations -->
+                <div class="space-y-2">
+                    <h3 class="font-bold text-slate-100 uppercase text-[11px] border-b border-slate-700 pb-1">5. สรุปเงิน และส่วนลด</h3>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="block text-slate-400 mb-1 font-medium">ส่วนลดท้ายบิล (บาท)</label>
+                            <input type="number" id="globalDiscount" value="0" min="0" oninput="updatePreview()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-slate-400 mb-1 font-medium">หัก เงินมัดจำ/เบิกล่วงหน้า (บาท)</label>
+                            <input type="number" id="depositAmount" value="0" min="0" oninput="updatePreview()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between p-2.5 bg-slate-900 rounded-lg border border-slate-700">
+                        <span class="font-semibold text-slate-200">ภาษีมูลค่าเพิ่ม (VAT 7%)</span>
+                        <input type="checkbox" id="vatToggle" checked onchange="updatePreview()" class="w-4 h-4 text-blue-600 rounded focus:ring-blue-500 bg-slate-800 border-slate-600">
+                    </div>
+                </div>
+
+                <!-- 6. Payment & Notes -->
+                <div class="space-y-2">
+                    <h3 class="font-bold text-slate-100 uppercase text-[11px] border-b border-slate-700 pb-1">6. การชำระเงิน และหมายเหตุ</h3>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="block text-slate-400 mb-1 font-medium">เบอร์พร้อมเพย์ / บัญชี</label>
+                            <input type="text" id="promptpayNo" value="089-777-9999 (กสิกรไทย)" oninput="updatePreview()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-slate-400 mb-1 font-medium">ชื่อบัญชี</label>
+                            <input type="text" id="promptpayName" value="บจก. ออโต้ เทค เซอร์วิส" oninput="updatePreview()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-slate-400 mb-1 font-medium">รูป QR Code พร้อมเพย์</label>
+                        <input type="file" id="qrFile" accept="image/*" onchange="handleQrUpload(event)" class="w-full text-xs text-slate-400 file:mr-3 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-slate-700 file:text-slate-200 hover:file:bg-slate-600">
+                    </div>
+                    <div>
+                        <label class="block text-slate-400 mb-1 font-medium">หมายเหตุ / เงื่อนไขการรับประกัน</label>
+                        <textarea id="warrantyNotes" rows="2" oninput="updatePreview()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white focus:ring-2 focus:ring-blue-500 focus:outline-none">- รับประกันอะไหล่แท้และงานซ่อมเป็นเวลา 90 วัน หรือ 5,000 กิโลเมตร
+- อะไหล่เก่าที่เปลี่ยนถอนคืนเรียบร้อยแล้ว โปรดเก็บใบรับรองไว้เป็นหลักฐาน</textarea>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- A4 Live Preview Canvas Window -->
+        <section class="lg:col-span-7 flex justify-center items-start overflow-x-auto w-full pb-10">
+            
+            <div id="printableArea" class="a4-page flex flex-col justify-between text-slate-800 text-[11.5px] leading-snug">
+                
+                <!-- HEADER SECTION -->
+                <div>
+                    <div class="flex justify-between items-start border-b-2 border-slate-900 pb-3 mb-3">
+                        <div class="flex items-start gap-3">
+                            <!-- Shop Logo -->
+                            <div id="previewLogoContainer" class="w-16 h-16 rounded border border-slate-200 flex items-center justify-center bg-slate-50 overflow-hidden shrink-0">
+                                <span id="previewLogoPlaceholder" class="text-[10px] font-bold text-slate-400 text-center uppercase">LOGO</span>
+                                <img id="previewLogoImg" src="" class="w-full h-full object-cover hidden" alt="Shop Logo">
+                            </div>
+                            <div>
+                                <h2 id="prevShopName" class="text-lg font-bold text-slate-900 tracking-tight">บริษัท ออโต้ เทค เซอร์วิส จำกัด</h2>
+                                <p id="prevShopAddress" class="text-[11px] text-slate-600 mt-0.5 whitespace-pre-line leading-tight">99/15 ถนนมิตรภาพ ตำบลในเมือง อำเภอเมือง จังหวัดขอนแก่น 40000</p>
+                                <p class="text-[11px] text-slate-600 mt-0.5">
+                                    โทรศัพท์: <span id="prevShopPhone" class="font-medium text-slate-800">043-222-888, 089-777-9999</span> | เลขประจำตัวผู้เสียภาษี: <span id="prevShopTaxId" class="font-mono text-slate-800">0105560123456</span>
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="text-right shrink-0">
+                            <h1 id="prevDocType" class="text-xs font-bold text-slate-900 uppercase tracking-wide bg-slate-100 px-2.5 py-1 rounded border border-slate-300 inline-block mb-1.5">
+                                ใบเสร็จรับเงิน / ใบกำกับภาษี
+                            </h1>
+                            <div class="text-[11px] space-y-0.5 text-slate-700">
+                                <p>เลขที่เอกสาร: <span id="prevInvoiceNo" class="font-bold font-mono text-slate-900">INV-2026-0042</span></p>
+                                <p>วันที่: <span id="prevInvoiceDate">2026-11-07</span></p>
+                                <p>กำหนดชำระ: <span id="prevDueDate">2026-11-07</span></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- CUSTOMER & VEHICLE DETAILS -->
+                    <div class="grid grid-cols-2 gap-3 bg-slate-50 p-3 rounded-lg border border-slate-200 mb-4 text-[11px]">
+                        <div class="space-y-1">
+                            <p class="font-bold text-slate-900 border-b border-slate-200 pb-0.5 uppercase tracking-wider text-[10px]">ข้อมูลผู้รับบริการ / CUSTOMER</p>
+                            <p><span class="text-slate-500">ชื่อลูกค้า:</span> <span id="prevCustName" class="font-semibold text-slate-900 text-[11.5px]">คุณวิทวัส กิตติโสภณ</span></p>
+                            <p><span class="text-slate-500">เบอร์โทรศัพท์:</span> <span id="prevCustPhone" class="font-semibold text-slate-900">081-234-5678</span></p>
+                        </div>
+                        <div class="space-y-1">
+                            <p class="font-bold text-slate-900 border-b border-slate-200 pb-0.5 uppercase tracking-wider text-[10px]">ข้อมูลรถยนต์ / VEHICLE DETAILS</p>
+                            <div class="grid grid-cols-2 gap-x-2">
+                                <p><span class="text-slate-500">ยี่ห้อ/รุ่น:</span> <span id="prevCarModel" class="font-semibold text-slate-800">Honda CR-V 2.4</span></p>
+                                <p><span class="text-slate-500">ทะเบียน:</span> <span id="prevCarPlate" class="font-bold text-slate-900">ขก 8899 ขอนแก่น</span></p>
+                                <p><span class="text-slate-500">เลขไมล์:</span> <span id="prevCarMileage" class="text-slate-800">128,450 กม.</span></p>
+                                <p><span class="text-slate-500">Job No:</span> <span id="prevJobNo" class="font-mono text-slate-800">JOB-6901</span></p>
+                            </div>
+                            <p><span class="text-slate-500">ช่างผู้ดูแล:</span> <span id="prevMechanicName" class="text-slate-800">ช่างสมศักดิ์</span></p>
+                        </div>
+                    </div>
+
+                    <!-- PARTS AND SERVICES TABLE -->
+                    <div class="mb-4">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-slate-900 text-white text-[11px] uppercase font-semibold">
+                                    <th class="py-2 px-2.5 text-center w-8 border-b border-slate-900">#</th>
+                                    <th class="py-2 px-2.5 border-b border-slate-900">รายการอะไหล่ / รายละเอียดงานซ่อม</th>
+                                    <th class="py-2 px-2.5 text-center w-14 border-b border-slate-900">จำนวน</th>
+                                    <th class="py-2 px-2.5 text-right w-24 border-b border-slate-900">ราคา/หน่วย</th>
+                                    <th class="py-2 px-2.5 text-right w-28 border-b border-slate-900">จำนวนเงิน (บาท)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="previewTableBody" class="divide-y divide-slate-200 text-[11px]">
+                                <!-- Dynamic Rows -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- FOOTER SECTION & FINANCIAL SUMMARY -->
+                <div class="page-break-avoid mt-auto">
+                    
+                    <!-- PAYMENT & SUMMARY GRID -->
+                    <div class="grid grid-cols-12 gap-3 border-t-2 border-slate-900 pt-3 mb-3 items-start">
+                        
+                        <!-- LEFT: ENLARGED QR CODE & PAYMENT INFORMATION -->
+                        <div class="col-span-6 space-y-2.5">
+                            <div class="flex items-center gap-2.5 bg-slate-50 p-2.5 rounded-lg border border-slate-200">
+                                <!-- LARGE QR CODE DISPLAY -->
+                                <div id="previewQrContainer" class="w-24 h-24 bg-white border border-slate-300 rounded flex items-center justify-center shrink-0 overflow-hidden shadow-sm">
+                                    <span id="previewQrPlaceholder" class="text-[9px] font-bold text-slate-400 text-center uppercase p-1">PROMPTPAY QR</span>
+                                    <img id="previewQrImg" src="" class="w-full h-full object-contain hidden" alt="PromptPay QR Code">
+                                </div>
+                                <div class="text-[11px] space-y-0.5">
+                                    <p class="font-bold text-slate-900 text-[11.5px]">ชำระเงินผ่าน QR PromptPay</p>
+                                    <p class="text-slate-600">พร้อมเพย์: <span id="prevPromptpayNo" class="font-bold text-slate-900 font-mono">089-777-9999 (กสิกรไทย)</span></p>
+                                    <p class="text-slate-600">ชื่อบัญชี: <span id="prevPromptpayName" class="font-semibold text-slate-800">บจก. ออโต้ เทค เซอร์วิส</span></p>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <p class="font-bold text-slate-900 text-[10px] uppercase tracking-wider mb-0.5">เงื่อนไขการรับประกัน และหมายเหตุ:</p>
+                                <p id="prevWarrantyNotes" class="text-[10px] text-slate-600 whitespace-pre-line bg-slate-50 p-2 rounded border border-slate-200 leading-tight">- รับประกันอะไหล่แท้และงานซ่อมเป็นเวลา 90 วัน หรือ 5,000 กิโลเมตร
+- อะไหล่เก่าที่เปลี่ยนถอนคืนเรียบร้อยแล้ว โปรดเก็บใบรับรองไว้เป็นหลักฐาน</p>
+                            </div>
+                        </div>
+
+                        <!-- RIGHT: CALCULATIONS & TOTALS -->
+                        <div class="col-span-6 space-y-1 text-[11px] bg-slate-50 p-3 rounded-lg border border-slate-200">
+                            <div class="flex justify-between text-slate-600">
+                                <span>รวมเป็นเงิน (Subtotal):</span>
+                                <span id="prevSubtotal" class="font-semibold text-slate-900">0.00</span>
+                            </div>
+                            <div class="flex justify-between text-slate-600">
+                                <span>ส่วนลดท้ายบิล (Discount):</span>
+                                <span id="prevDiscount" class="font-semibold text-slate-900">0.00</span>
+                            </div>
+                            <div id="vatRow" class="flex justify-between text-slate-600">
+                                <span>ภาษีมูลค่าเพิ่ม (VAT 7%):</span>
+                                <span id="prevVat" class="font-semibold text-slate-900">0.00</span>
+                            </div>
+                            <div class="flex justify-between text-slate-600">
+                                <span>หัก เงินมัดจำ / เบิกล่วงหน้า:</span>
+                                <span id="prevDeposit" class="font-semibold text-slate-900">-0.00</span>
+                            </div>
+                            <div class="border-t border-slate-400 pt-1.5 mt-1 flex justify-between items-center font-bold text-[12px] text-slate-900 bg-slate-200 -mx-3 px-3 py-1.5">
+                                <span>จำนวนเงินสุทธิ (Net Total):</span>
+                                <span id="prevNetTotal" class="text-sm font-bold text-slate-900">0.00 บาท</span>
+                            </div>
+                            <div class="text-center pt-0.5">
+                                <span id="prevThaiBaht" class="text-[10px] text-slate-700 font-semibold">(ศูนย์บาทถ้วน)</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SIGNATURE BLOCK -->
+                    <div class="grid grid-cols-3 gap-3 pt-4 border-t border-slate-300 text-center text-[10px]">
+                        <div class="space-y-5">
+                            <p class="text-slate-700 font-semibold">ผู้ประเมินราคา / ช่างผู้ซ่อม</p>
+                            <div class="border-b border-slate-400 w-3/4 mx-auto"></div>
+                            <p class="text-slate-500">วันที่ ........../........../..........</p>
+                        </div>
+                        <div class="space-y-5">
+                            <p class="text-slate-700 font-semibold">ผู้รับเงิน / Cashier</p>
+                            <div class="border-b border-slate-400 w-3/4 mx-auto"></div>
+                            <p class="text-slate-500">วันที่ ........../........../..........</p>
+                        </div>
+                        <div class="space-y-5">
+                            <p class="text-slate-700 font-semibold">ผู้สั่งซ่อม / ผู้รับรถยนต์</p>
+                            <div class="border-b border-slate-400 w-3/4 mx-auto"></div>
+                            <p class="text-slate-500">วันที่ ........../........../..........</p>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // Default Sample Data
+        let items = [
+            { name: "น้ำมันเครื่องสังเคราะห์แท้ Fully Synthetic 5W-30 (4L)", qty: 1, price: 2200 },
+            { name: "ไส้กรองน้ำมันเครื่อง (Engine Oil Filter)", qty: 1, price: 350 },
+            { name: "ชุดผ้าเบรกหน้า Ceramic Premium", qty: 1, price: 2450 },
+            { name: "จานเบรกคู่หน้า Vent Disc 280mm", qty: 2, price: 1800 },
+            { name: "น้ำมันเบรก DOT4 High Performance", qty: 2, price: 320 },
+            { name: "ค่าบริการเจียรจานเบรก และถ่วงล้อมุมศูนย์", qty: 1, price: 1200 }
+        ];
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('invoiceDate').value = today;
+            document.getElementById('dueDate').value = today;
+            renderItemInputs();
+            updatePreview();
+        });
+
+        function triggerPrint() {
+            setTimeout(() => {
+                window.print();
+            }, 100);
+        }
+
+        function resetForm() {
+            if (confirm("คุณต้องการล้างข้อมูลทั้งหมดในแบบฟอร์มหรือไม่?")) {
+                document.getElementById('invoiceNo').value = "INV-2026-0001";
+                document.getElementById('custName').value = "";
+                document.getElementById('custPhone').value = "";
+                document.getElementById('carModel').value = "";
+                document.getElementById('carPlate').value = "";
+                document.getElementById('carMileage').value = "";
+                document.getElementById('mechanicName').value = "";
+                document.getElementById('jobNo').value = "";
+                document.getElementById('globalDiscount').value = 0;
+                document.getElementById('depositAmount').value = 0;
+                items = [{ name: "", qty: 1, price: 0 }];
+                renderItemInputs();
+                updatePreview();
+            }
+        }
+
+        function renderItemInputs() {
+            const container = document.getElementById('itemInputsContainer');
+            container.innerHTML = '';
+            
+            items.forEach((item, index) => {
+                const div = document.createElement('div');
+                div.className = "p-2.5 bg-slate-900 rounded-lg border border-slate-700 space-y-1.5 relative";
+                div.innerHTML = `
+                    <div class="flex justify-between items-center">
+                        <span class="text-[11px] font-bold text-slate-300">รายการที่ ${index + 1}</span>
+                        ${items.length > 1 ? `<button onclick="removeItemRow(${index})" class="text-rose-400 hover:text-rose-300 text-[10px] font-semibold">ลบรายการ</button>` : ''}
+                    </div>
+                    <div>
+                        <input type="text" placeholder="ระบุรายการ อะไหล่ หรือบริการ" value="${item.name}" oninput="updateItem(${index}, 'name', this.value)" class="w-full bg-slate-800 border border-slate-700 rounded p-1.5 text-xs text-white focus:ring-1 focus:ring-blue-500 focus:outline-none">
+                    </div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="text-[10px] text-slate-400">จำนวน</label>
+                            <input type="number" min="1" value="${item.qty}" oninput="updateItem(${index}, 'qty', this.value)" class="w-full bg-slate-800 border border-slate-700 rounded p-1 text-xs text-white focus:ring-1 focus:ring-blue-500 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="text-[10px] text-slate-400">ราคา/หน่วย (บาท)</label>
+                            <input type="number" min="0" value="${item.price}" oninput="updateItem(${index}, 'price', this.value)" class="w-full bg-slate-800 border border-slate-700 rounded p-1 text-xs text-white focus:ring-1 focus:ring-blue-500 focus:outline-none">
+                        </div>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function addItemRow() {
+            items.push({ name: "", qty: 1, price: 0 });
+            renderItemInputs();
+            updatePreview();
+        }
+
+        function removeItemRow(index) {
+            items.splice(index, 1);
+            renderItemInputs();
+            updatePreview();
+        }
+
+        function updateItem(index, field, value) {
+            items[index][field] = (field === 'qty' || field === 'price') ? (parseFloat(value) || 0) : value;
+            updatePreview();
+        }
+
+        function handleLogoUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = document.getElementById('previewLogoImg');
+                    const placeholder = document.getElementById('previewLogoPlaceholder');
+                    img.src = e.target.result;
+                    img.classList.remove('hidden');
+                    placeholder.classList.add('hidden');
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function handleQrUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = document.getElementById('previewQrImg');
+                    const placeholder = document.getElementById('previewQrPlaceholder');
+                    img.src = e.target.result;
+                    img.classList.remove('hidden');
+                    placeholder.classList.add('hidden');
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function ThaiBahtText(num) {
+            if (isNaN(num) || num <= 0) return "(ศูนย์บาทถ้วน)";
+            const thNumber = ["ศูนย์", "หนึ่ง", "สอง", "สาม", "สี่", "ห้า", "หก", "เจ็ด", "แปด", "เก้า"];
+            const thUnit = ["", "สิบ", "ร้อย", "พัน", "หมื่น", "แสน", "ล้าน"];
+            
+            let numStr = parseFloat(num).toFixed(2);
+            let parts = numStr.split('.');
+            let baht = parts[0];
+            let satang = parts[1];
+            
+            function convertInteger(str) {
+                let len = str.length;
+                let res = "";
+                for (let i = 0; i < len; i++) {
+                    let n = parseInt(str[i]);
+                    let pos = len - i - 1;
+                    if (n !== 0) {
+                        if (pos === 1 && n === 1) res += "สิบ";
+                        else if (pos === 1 && n === 2) res += "ยี่สิบ";
+                        else if (pos === 0 && n === 1 && len > 1 && str[len-2] !== '0') res += "เอ็ด";
+                        else res += thNumber[n] + thUnit[pos];
+                    }
+                }
+                return res;
+            }
+            
+            let bahtText = convertInteger(baht);
+            let result = bahtText ? bahtText + "บาท" : "";
+            
+            if (satang === "00") {
+                result += "ถ้วน";
+            } else {
+                let satangText = convertInteger(satang);
+                result += satangText + "สตางค์";
+            }
+            return "(" + result + ")";
+        }
+
+        function updatePreview() {
+            document.getElementById('prevDocType').innerText = document.getElementById('docType').value;
+            document.getElementById('prevInvoiceNo').innerText = document.getElementById('invoiceNo').value;
+            document.getElementById('prevInvoiceDate').innerText = document.getElementById('invoiceDate').value;
+            document.getElementById('prevDueDate').innerText = document.getElementById('dueDate').value;
+
+            document.getElementById('prevShopName').innerText = document.getElementById('shopName').value;
+            document.getElementById('prevShopAddress').innerText = document.getElementById('shopAddress').value;
+            document.getElementById('prevShopPhone').innerText = document.getElementById('shopPhone').value;
+            document.getElementById('prevShopTaxId').innerText = document.getElementById('shopTaxId').value;
+
+            document.getElementById('prevCustName').innerText = document.getElementById('custName').value;
+            document.getElementById('prevCustPhone').innerText = document.getElementById('custPhone').value;
+            document.getElementById('prevCarModel').innerText = document.getElementById('carModel').value;
+            document.getElementById('prevCarPlate').innerText = document.getElementById('carPlate').value;
+            document.getElementById('prevCarMileage').innerText = document.getElementById('carMileage').value;
+            document.getElementById('prevJobNo').innerText = document.getElementById('jobNo').value;
+            document.getElementById('prevMechanicName').innerText = document.getElementById('mechanicName').value;
+
+            document.getElementById('prevPromptpayNo').innerText = document.getElementById('promptpayNo').value;
+            document.getElementById('prevPromptpayName').innerText = document.getElementById('promptpayName').value;
+            document.getElementById('prevWarrantyNotes').innerText = document.getElementById('warrantyNotes').value;
+
+            const tbody = document.getElementById('previewTableBody');
+            tbody.innerHTML = '';
+            
+            let subtotal = 0;
+            items.forEach((item, index) => {
+                let total = (item.qty || 0) * (item.price || 0);
+                subtotal += total;
+                
+                const tr = document.createElement('tr');
+                tr.className = index % 2 === 0 ? 'bg-white' : 'bg-slate-50/50';
+                tr.innerHTML = `
+                    <td class="py-2 px-2.5 text-center text-slate-500">${index + 1}</td>
+                    <td class="py-2 px-2.5 font-medium text-slate-800">${item.name || '-'}</td>
+                    <td class="py-2 px-2.5 text-center font-mono">${item.qty}</td>
+                    <td class="py-2 px-2.5 text-right font-mono">${(item.price || 0).toLocaleString('th-TH', {minimumFractionDigits: 2})}</td>
+                    <td class="py-2 px-2.5 text-right font-mono font-semibold text-slate-900">${total.toLocaleString('th-TH', {minimumFractionDigits: 2})}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            const globalDiscount = parseFloat(document.getElementById('globalDiscount').value) || 0;
+            const deposit = parseFloat(document.getElementById('depositAmount').value) || 0;
+            const vatEnabled = document.getElementById('vatToggle').checked;
+
+            let afterDiscount = Math.max(0, subtotal - globalDiscount);
+            let vat = vatEnabled ? afterDiscount * 0.07 : 0;
+            let netTotal = Math.max(0, afterDiscount + vat - deposit);
+
+            document.getElementById('prevSubtotal').innerText = subtotal.toLocaleString('th-TH', {minimumFractionDigits: 2}) + ' บาท';
+            document.getElementById('prevDiscount').innerText = globalDiscount.toLocaleString('th-TH', {minimumFractionDigits: 2}) + ' บาท';
+            
+            const vatRow = document.getElementById('vatRow');
+            if(vatEnabled) {
+                vatRow.style.display = 'flex';
+                document.getElementById('prevVat').innerText = vat.toLocaleString('th-TH', {minimumFractionDigits: 2}) + ' บาท';
+            } else {
+                vatRow.style.display = 'none';
+            }
+
+            document.getElementById('prevDeposit').innerText = '-' + deposit.toLocaleString('th-TH', {minimumFractionDigits: 2}) + ' บาท';
+            document.getElementById('prevNetTotal').innerText = netTotal.toLocaleString('th-TH', {minimumFractionDigits: 2}) + ' บาท';
+            document.getElementById('prevThaiBaht').innerText = ThaiBahtText(netTotal);
+        }
+    </script>
+</body>
+</html>
